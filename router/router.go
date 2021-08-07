@@ -1,14 +1,19 @@
 package route
 
 import (
+	"net/http"
+
 	"github.com/StayAlert/blogByF/backend/domains/healthcheck"
+	"github.com/gofiber/adaptor/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
-func Router() *fiber.App {
+func Router() {
 	router := fiber.New()
 
-	router.Get("health-check", healthcheck.HealthCheck)
+	group := router.Group("/check")
+	group.Get("/health-check", healthcheck.HealthCheck)
 
-	return router
+	http.ListenAndServe(":4000", adaptor.FiberApp(router))
+
 }
